@@ -1,0 +1,14 @@
+.container{
+    box-shadow: 2px 2px 3px black;
+}
+body{
+    height: 100%;
+    width: 100%;
+    background-color: #ffffff;
+}
+.custom-body{
+    height: 100%;
+    width: 100%;
+    padding: 20px;
+    background-color: black;
+}
