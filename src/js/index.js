@@ -8,6 +8,8 @@ Vue.component('todo-input',{
             <p class="control is-expanded">
                 <input class="input is-rounded" type="text" placeholder="Add new item !" v-model="newItem">
             </p>
+
+           
             
             <p class="control">
                 <a class="button is-outlined is-rounded" @click="addItem">
@@ -20,23 +22,31 @@ Vue.component('todo-input',{
                     </span>
                 </a>
             </p>
+           
         </div>
+        <p style="color: red;" v-if="error">Please type a task</p>
     </div>`,
    
     methods:{
         addItem(){
             
             if(this.newItem!=''){
-                this.$emit('newItemAdded',{text: this.newItem,isVisible: true})
+                this.error = false
+                this.$emit('newItemAdded',{text: this.newItem,isVisible: true,isChecked: false})
                 this.newItem = ''
+            }else{
+                this.error = true
             }
+
+            
             
         }
     },
 
     data(){
         return{
-            newItem: ''
+            newItem: '',
+            error: false
         }
     }
 
@@ -45,18 +55,24 @@ Vue.component('todo-input',{
 // list component
 Vue.component('todo-list',{
     template: `
+    <div>
     <ul>
         <li v-for="item in itemlist" v-bind:item="item" v-bind:key="item.id">
+           
             <div v-if="item.isVisible" class="notification has-text-left family-sans-serif" style="margin:12px;">
-                    
+            <input type="checkbox" @click="item.isChecked=true">
                     {{item.text}} 
-                    
-                    <button class="button is-right is-light" @click="item.isVisible=false">
+                    <button class="button is-light" style="float: right;" @click="item.isVisible=false">
                         <i class="fas fa-times"></i>
                     </button>
             </div>
         </li>
-    </ul>`,
+
+       
+        
+    </ul>
+    </div>
+    `,
 
     props:[
         'itemlist'
@@ -64,8 +80,11 @@ Vue.component('todo-list',{
     
     data(){
         return{
-
+            
         }
+    },
+    created(){
+        
     }
 })
 
@@ -77,6 +96,9 @@ Vue.component('to-do',{
         </todo-input>
         <todo-list v-bind:itemlist="listItem">
         </todo-list>
+        <button class="button is-right is-light" v-if="show" @click="clearDoneTask">
+    clear Complete         
+    </button>
     </div>`,
     
     props: [
@@ -86,12 +108,21 @@ Vue.component('to-do',{
     methods:{
         newItemAddedToList(obj){
            this.listItem.push(obj)
+           this.show = true
+        },
+        clearDoneTask(){
+            for(let i = 0;i<this.listItem.length;i++){
+                if(this.listItem[i].isChecked==true){
+                    this.listItem[i].isVisible==false
+                }
+            }
         }
     },
 
     data(){
         return{
-            listItem: []
+            listItem: [],
+            show: false
         }
     }
 })
