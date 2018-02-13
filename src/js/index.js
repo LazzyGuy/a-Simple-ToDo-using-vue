@@ -25,9 +25,12 @@ Vue.component('todo-input',{
    
     methods:{
         addItem(){
-          
-            this.$emit('newItemAdded',{text: this.newItem,isVisible: true})
-            this.newItem = ''
+            
+            if(this.newItem!=''){
+                this.$emit('newItemAdded',{text: this.newItem,isVisible: true})
+                this.newItem = ''
+            }
+            
         }
     },
 
